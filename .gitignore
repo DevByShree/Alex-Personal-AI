@@ -17,3 +17,20 @@ backups/
 *.log
 *.db
 *.sqlite3
+
+
+# Ignore Python virtual environment
+/.venv/
+/venv/
+/env/
+
+# Ignore local AI models
+/models/
+
+# Ignore private data
+/data/
+security_config.json
+
+# Python cache
+__pycache__/
+*.py[cod]
