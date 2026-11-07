@@ -1,0 +1,19 @@
+
+# Local AI models
+models/
+*.onnx
+*.gguf
+*.safetensors
+*.pt
+*.pth
+
+# Private application data
+data/
+security_config.json
+
+# Local backups and logs
+backup_before_*/
+backups/
+*.log
+*.db
+*.sqlite3

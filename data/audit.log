@@ -1,0 +1,40 @@
+{"time": "2026-11-07T15:54:48", "event": "refused", "kind": "unknown-app", "target": "this pc", "note": ""}
+{"time": "2026-11-07T15:55:03", "event": "refused", "kind": "unknown-app", "target": "heartsome", "note": ""}
+{"time": "2026-11-07T15:55:14", "event": "refused", "kind": "unknown-app", "target": "grom", "note": ""}
+{"time": "2026-11-07T15:55:24", "event": "refused", "kind": "unknown-app", "target": "chrome browser", "note": ""}
+{"time": "2026-11-07T16:15:51", "event": "requested", "kind": "open_app", "target": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "note": ""}
+{"time": "2026-11-07T16:16:07", "event": "approved", "kind": "open_app", "target": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "note": ""}
+{"time": "2026-11-07T16:18:15", "event": "requested", "kind": "open_app", "target": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "note": ""}
+{"time": "2026-11-07T16:18:29", "event": "approved", "kind": "open_app", "target": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "note": ""}
+{"time": "2026-11-07T16:21:09", "event": "refused", "kind": "unknown-app", "target": "e-men", "note": ""}
+{"time": "2026-11-07T16:32:57", "event": "requested", "kind": "open_app", "target": "C:\\Users\\shree\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe", "note": ""}
+{"time": "2026-11-07T16:33:08", "event": "approved", "kind": "open_app", "target": "C:\\Users\\shree\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe", "note": ""}
+{"time": "2026-11-07T16:39:00", "event": "refused", "kind": "unknown-app", "target": "e-min", "note": ""}
+{"time": "2026-11-07T16:39:08", "event": "refused", "kind": "unknown-app", "target": "email", "note": ""}
+{"time": "2026-11-07T16:39:24", "event": "refused", "kind": "unknown-app", "target": "mill", "note": ""}
+{"time": "2026-11-07T16:39:32", "event": "refused", "kind": "unknown-app", "target": "male", "note": ""}
+{"time": "2026-11-07T16:39:42", "event": "refused", "kind": "unknown-app", "target": "m a l", "note": ""}
+{"time": "2026-11-07T16:39:50", "event": "refused", "kind": "unknown-app", "target": "mill", "note": ""}
+{"time": "2026-11-07T16:40:13", "event": "requested", "kind": "open_site", "target": "https://mail.google.com/mail/u/0/#inbox", "note": ""}
+{"time": "2026-11-07T16:40:23", "event": "approved", "kind": "open_site", "target": "https://mail.google.com/mail/u/0/#inbox", "note": ""}
+{"time": "2026-11-07T16:40:32", "event": "requested", "kind": "open_site", "target": "https://mail.google.com/mail/u/0/#inbox", "note": ""}
+{"time": "2026-11-07T16:40:42", "event": "approved", "kind": "open_site", "target": "https://mail.google.com/mail/u/0/#inbox", "note": ""}
+{"time": "2026-11-07T16:40:53", "event": "refused", "kind": "unknown-app", "target": "crew", "note": ""}
+{"time": "2026-11-07T16:41:13", "event": "requested", "kind": "open_site", "target": "https://www.youtube.com", "note": ""}
+{"time": "2026-11-07T16:41:27", "event": "approved", "kind": "open_site", "target": "https://www.youtube.com", "note": ""}
+{"time": "2026-11-07T16:41:36", "event": "refused", "kind": "unknown-app", "target": "new tab", "note": ""}
+{"time": "2026-11-07T16:44:00", "event": "refused", "kind": "unknown-app", "target": "gpt", "note": ""}
+{"time": "2026-11-07T16:44:37", "event": "refused", "kind": "unknown-app", "target": "gbd", "note": ""}
+{"time": "2026-11-07T16:44:45", "event": "refused", "kind": "unknown-app", "target": "gpt", "note": ""}
+{"time": "2026-11-07T16:45:31", "event": "requested", "kind": "open_site", "target": "https://www.youtube.com", "note": ""}
+{"time": "2026-11-07T16:45:45", "event": "approved", "kind": "open_site", "target": "https://www.youtube.com", "note": ""}
+{"time": "2026-11-07T16:47:12", "event": "refused", "kind": "unknown-app", "target": "the a", "note": ""}
+{"time": "2026-11-07T16:47:21", "event": "refused", "kind": "unknown-app", "target": "ei", "note": ""}
+{"time": "2026-11-07T16:47:29", "event": "refused", "kind": "unknown-app", "target": "ei", "note": ""}
+{"time": "2026-11-07T16:47:37", "event": "refused", "kind": "unknown-app", "target": "gpt", "note": ""}
+{"time": "2026-11-07T16:48:07", "event": "refused", "kind": "unknown-app", "target": "gpt", "note": ""}
+{"time": "2026-11-07T16:49:20", "event": "requested", "kind": "open_app", "target": "C:\\Users\\shree\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe", "note": ""}
+{"time": "2026-11-07T16:49:30", "event": "approved", "kind": "open_app", "target": "C:\\Users\\shree\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe", "note": ""}
+{"time": "2026-11-07T16:49:55", "event": "refused", "kind": "unknown-app", "target": "your tube", "note": ""}
+{"time": "2026-11-07T16:50:13", "event": "requested", "kind": "open_site", "target": "https://www.youtube.com", "note": ""}
+{"time": "2026-11-07T16:50:27", "event": "approved", "kind": "open_site", "target": "https://www.youtube.com", "note": ""}

@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Queen</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --c: #2fe6ff;
+            --c2: #0a8fb3;
+            --glow: #2fe6ff66;
+            --gold: #ffc24a;
+            --bg: #020a12;
+            --txt: #d6f7ff;
+            --dim: #5d8da0;
+            --s1: 40s;
+            --s2: 24s;
+            --s3: 14s;
+            --breath: 5s;
+            --grow: 1.02
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            background: radial-gradient(90% 70% at 50% 45%, #06202e 0%, #020a12 70%);
+            color: var(--txt);
+            font-family: Rajdhani, "Segoe UI", system-ui, sans-serif;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 100%
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image: linear-gradient(#2fe6ff0d 1px, transparent 1px), linear-gradient(90deg, #2fe6ff0d 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask: radial-gradient(70% 60% at 50% 50%, #000, transparent)
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9;
+            background: repeating-linear-gradient(0deg, #0000 0 2px, #00000030 3px);
+            mix-blend-mode: multiply
+        }
+
+        /* top bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 28px;
+            border-bottom: 1px solid #2fe6ff33;
+            background: linear-gradient(#2fe6ff12, transparent);
+            position: relative;
+            z-index: 2
+        }
+
+        header .brand {
+            font-family: Orbitron;
+            font-weight: 600;
+            letter-spacing: .28em;
+            font-size: 13px;
+            color: var(--c)
+        }
+
+        header .clock {
+            font-family: Orbitron;
+            font-size: 15px;
+            letter-spacing: .2em;
+            color: var(--txt)
+        }
+
+        header .link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            letter-spacing: .18em;
+            color: var(--dim)
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--c);
+            box-shadow: 0 0 10px var(--c);
+            animation: blink 1.6s infinite
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: .35
+            }
+        }
+
+        /* main */
+        main {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            gap: 24px;
+            padding: 0 28px;
+            min-height: 0
+        }
+
+        .panel {
+            border: 1px solid #2fe6ff33;
+            background: #04141f99;
+            padding: 16px 18px;
+            position: relative;
+            max-width: 300px;
+            width: 100%;
+            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))
+        }
+
+        .panel.r {
+            justify-self: end
+        }
+
+        .panel h3 {
+            font-family: Orbitron;
+            font-weight: 400;
+            font-size: 11px;
+            letter-spacing: .3em;
+            color: var(--c);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #2fe6ff33
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            letter-spacing: .08em;
+            color: var(--dim);
+            margin-top: 10px
+        }
+
+        .row b {
+            font-weight: 500;
+            color: var(--txt)
+        }
+
+        .bar {
+            height: 3px;
+            background: #2fe6ff22;
+            margin-top: 5px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .bar i {
+            position: absolute;
+            inset: 0 auto 0 0;
+            background: var(--c);
+            box-shadow: 0 0 8px var(--c);
+            width: 50%;
+            transition: width .6s
+        }
+
+        #log {
+            list-style: none;
+            padding: 0;
+            font-size: 13.5px;
+            letter-spacing: .06em;
+            color: var(--dim);
+            line-height: 1.9
+        }
+
+        #log li:first-child {
+            color: var(--txt)
+        }
+
+        #log span {
+            color: var(--c);
+            margin-right: 8px;
+            font-family: Orbitron;
+            font-size: 10.5px
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            min-width: 0;
+            align-items: flex-start
+        }
+
+        .col.r {
+            align-items: flex-end;
+            justify-self: end
+        }
+
+        .panel.wide {
+            max-width: 380px
+        }
+
+        .panel h3 .cnt {
+            float: right;
+            color: var(--txt);
+            letter-spacing: .12em
+        }
+
+        #tasks,
+        #done {
+            list-style: none;
+            padding: 0
+        }
+
+        #tasks {
+            max-height: 46vh;
+            overflow: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #2fe6ff55 transparent
+        }
+
+        .task {
+            display: grid;
+            grid-template-columns: 28px 1fr;
+            gap: 4px 10px;
+            padding: 11px 0;
+            border-bottom: 1px dashed #2fe6ff22
+        }
+
+        .task .n {
+            font-family: Orbitron;
+            font-size: 12px;
+            color: #2fe6ff;
+            padding-top: 3px
+        }
+
+        .task .t {
+            font-size: 17px;
+            line-height: 1.25;
+            color: var(--txt);
+            overflow-wrap: anywhere
+        }
+
+        .task .m {
+            grid-column: 2;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 13px;
+            letter-spacing: .06em;
+            color: var(--dim)
+        }
+
+        .task .cd {
+            font-family: Orbitron;
+            font-size: 10.5px;
+            letter-spacing: .1em;
+            color: #2fe6ff;
+            white-space: nowrap
+        }
+
+        .task.none .cd {
+            color: var(--dim)
+        }
+
+        .task.soon .n,
+        .task.soon .cd {
+            color: #ffc24a
+        }
+
+        .task.over .n,
+        .task.over .cd {
+            color: #ff4d5e
+        }
+
+        .task.over .t {
+            color: #ffd9dd
+        }
+
+        .task.new {
+            animation: flash 1.1s ease-out 3
+        }
+
+        @keyframes flash {
+            0% {
+                background: #2fe6ff40
+            }
+
+            100% {
+                background: transparent
+            }
+        }
+
+        .empty {
+            color: var(--dim);
+            font-size: 14.5px;
+            line-height: 1.6;
+            letter-spacing: .04em;
+            padding: 6px 0
+        }
+
+        .empty q {
+            display: block;
+            color: #2fe6ff;
+            margin-top: 6px;
+            quotes: "\201C" "\201D"
+        }
+
+        .sub {
+            font-family: Orbitron;
+            font-size: 10px;
+            letter-spacing: .3em;
+            color: var(--dim);
+            margin-top: 16px;
+            padding-bottom: 6px
+        }
+
+        #done li {
+            font-size: 13.5px;
+            color: var(--dim);
+            text-decoration: line-through;
+            padding: 3px 0 3px 38px
+        }
+
+        #conv {
+            margin-top: 14px;
+            max-width: min(560px, 90vw);
+            font-size: 15px;
+            line-height: 1.5;
+            letter-spacing: .03em;
+            min-height: 46px
+        }
+
+        #conv div {
+            color: var(--dim)
+        }
+
+        #conv b {
+            font-family: Orbitron;
+            font-weight: 400;
+            font-size: 10.5px;
+            letter-spacing: .25em;
+            color: var(--c);
+            margin-right: 10px
+        }
+
+        #conv span {
+            color: var(--txt)
+        }
+
+        #hex {
+            font-family: Orbitron;
+            font-size: 10.5px;
+            color: var(--c2);
+            line-height: 1.9;
+            letter-spacing: .12em;
+            word-break: break-all;
+            margin-top: 14px
+        }
+
+        /* HUD */
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 0
+        }
+
+        .hud {
+            position: relative;
+            width: min(48vh, 440px);
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center
+        }
+
+        .hud svg.rings {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible
+        }
+
+        .rot {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: spin linear infinite
+        }
+
+        .r1 {
+            animation-duration: var(--s1)
+        }
+
+        .r2 {
+            animation-duration: var(--s2);
+            animation-direction: reverse
+        }
+
+        .r3 {
+            animation-duration: var(--s3)
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .rings * {
+            transition: stroke .4s, opacity .4s
+        }
+
+        .core {
+            position: relative;
+            width: 38%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            z-index: 2;
+            background: radial-gradient(circle at 50% 40%, #0c3c52, #031019 72%);
+            border: 2px solid var(--c);
+            box-shadow: 0 0 40px var(--glow), inset 0 0 28px var(--glow);
+            animation: breathe var(--breath) ease-in-out infinite;
+            transition: border-color .4s, box-shadow .4s
+        }
+
+        .core svg {
+            width: 56%;
+            height: 56%;
+            filter: drop-shadow(0 0 6px var(--c))
+        }
+
+        @keyframes breathe {
+            50% {
+                transform: scale(var(--grow))
+            }
+        }
+
+        .pulse {
+            position: absolute;
+            width: 38%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 1.5px solid var(--c);
+            opacity: 0
+        }
+
+        .sweep {
+            position: absolute;
+            width: 76%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            opacity: 0;
+            background: conic-gradient(from 0deg, transparent 0 72%, var(--c));
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px))
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: .7
+            }
+
+            100% {
+                transform: scale(var(--reach, 2.3));
+                opacity: 0
+            }
+        }
+
+        h1 {
+            font-family: Orbitron;
+            font-weight: 800;
+            font-size: clamp(34px, 5.5vh, 52px);
+            letter-spacing: .38em;
+            margin: 18px 0 0 .38em;
+            color: var(--txt);
+            text-shadow: 0 0 22px var(--glow)
+        }
+
+        .tag {
+            margin-top: 8px;
+            font-size: 13px;
+            letter-spacing: .42em;
+            color: var(--dim)
+        }
+
+        #label {
+            margin-top: 16px;
+            font-family: Orbitron;
+            font-size: 14px;
+            letter-spacing: .24em;
+            color: var(--c);
+            min-height: 22px;
+            padding: 8px 22px;
+            border: 1px solid #2fe6ff44;
+            background: #2fe6ff0f;
+            transition: color .3s, border-color .3s
+        }
+
+        /* corner brackets */
+        .br {
+            position: fixed;
+            width: 34px;
+            height: 34px;
+            border: 2px solid var(--c);
+            opacity: .7;
+            z-index: 3;
+            transition: border-color .4s
+        }
+
+        .br.tl {
+            top: 62px;
+            left: 14px;
+            border-right: 0;
+            border-bottom: 0
+        }
+
+        .br.tr {
+            top: 62px;
+            right: 14px;
+            border-left: 0;
+            border-bottom: 0
+        }
+
+        .br.bl {
+            bottom: 14px;
+            left: 14px;
+            border-right: 0;
+            border-top: 0
+        }
+
+        .br.brr {
+            bottom: 14px;
+            right: 14px;
+            border-left: 0;
+            border-top: 0
+        }
+
+        /* wave */
+        canvas {
+            display: block;
+            width: 100%;
+            height: 22vh;
+            min-height: 110px
+        }
+
+        /* states */
+        body.s-waiting {
+            --breath: 6s;
+            --grow: 1.02;
+            --s1: 60s;
+            --s2: 40s;
+            --s3: 26s
+        }
+
+        body.s-listening {
+            --breath: 3.2s;
+            --grow: 1.05;
+            --s1: 30s;
+            --s2: 18s;
+            --s3: 10s
+        }
+
+        body.s-listening .pulse {
+            animation: ripple 3.2s ease-out infinite
+        }
+
+        body.s-listening .pulse:nth-of-type(2) {
+            animation-delay: 1.06s
+        }
+
+        body.s-hearing {
+            --c: #9ff4ff;
+            --glow: #9ff4ffaa;
+            --breath: .9s;
+            --grow: 1.08;
+            --s1: 14s;
+            --s2: 8s;
+            --s3: 4s;
+            --reach: 2.5
+        }
+
+        body.s-hearing .pulse {
+            animation: ripple 1.4s ease-out infinite
+        }
+
+        body.s-hearing .pulse:nth-of-type(2) {
+            animation-delay: .47s
+        }
+
+        body.s-thinking {
+            --c: #ffc24a;
+            --c2: #b57d10;
+            --glow: #ffc24a77;
+            --breath: 2s;
+            --grow: 1.03;
+            --s1: 10s;
+            --s2: 6s;
+            --s3: 3s
+        }
+
+        body.s-thinking .sweep {
+            opacity: 1;
+            animation: spin 1.1s linear infinite
+        }
+
+        body.s-speaking {
+            --c: #4aa8ff;
+            --c2: #1b64b3;
+            --glow: #4aa8ffaa;
+            --breath: .7s;
+            --grow: 1.07;
+            --s1: 18s;
+            --s2: 9s;
+            --s3: 5s;
+            --reach: 1.9
+        }
+
+        body.s-speaking .pulse {
+            animation: ripple 1.8s ease-out infinite
+        }
+
+        body.s-speaking .pulse:nth-of-type(2) {
+            animation-delay: .6s
+        }
+
+        body.s-offline {
+            --c: #ff4d5e;
+            --c2: #8a2330;
+            --glow: #ff4d5e55;
+            --s1: 120s;
+            --s2: 90s;
+            --s3: 70s
+        }
+
+        body.s-offline .core {
+            filter: saturate(.7) brightness(.75)
+        }
+
+        body.s-offline .dot {
+            animation-duration: .8s
+        }
+
+        @media(max-width:980px) {
+            main {
+                grid-template-columns: 1fr
+            }
+
+            .panel {
+                display: none
+            }
+
+            .br {
+                display: none
+            }
+
+            header .clock {
+                display: none
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important;
+                transition: none !important
+            }
+        }
+    </style>
+</head>
+
+<body class="s-offline">
+    <span class="br tl"></span><span class="br tr"></span><span class="br bl"></span><span class="br brr"></span>
+
+    <header>
+        <div class="brand">QUEEN&nbsp;//&nbsp;OS</div>
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="link"><span class="dot"></span><span id="link">LINK OFFLINE</span></div>
+    </header>
+
+    <main>
+        <div class="col">
+            <aside class="panel">
+                <h3>SYSTEM DIAGNOSTICS</h3>
+                <div class="row">Core <b id="v1">--</b></div>
+                <div class="bar"><i id="b1"></i></div>
+                <div class="row">Voice engine <b id="v2">--</b></div>
+                <div class="bar"><i id="b2"></i></div>
+                <div class="row">Neural link <b id="v3">--</b></div>
+                <div class="bar"><i id="b3"></i></div>
+                <div class="row">Latency <b id="v4">-- ms</b></div>
+            </aside>
+            <aside class="panel">
+                <h3>ACTIVITY LOG</h3>
+                <ul id="log"></ul>
+                <div id="hex" aria-hidden="true"></div>
+            </aside>
+        </div>
+
+        <section class="center">
+            <div class="hud">
+                <svg class="rings" viewBox="0 0 400 400" aria-hidden="true">
+                    <circle cx="200" cy="200" r="196" fill="none" stroke="var(--c)" stroke-opacity=".25"
+                        stroke-width="1" />
+                    <g class="rot r1">
+                        <circle cx="200" cy="200" r="188" fill="none" stroke="var(--c)" stroke-width="6"
+                            stroke-dasharray="2 9.9" opacity=".75" />
+                    </g>
+                    <g class="rot r2">
+                        <circle cx="200" cy="200" r="168" fill="none" stroke="var(--c)" stroke-width="3"
+                            stroke-dasharray="120 40 60 40" opacity=".8" />
+                    </g>
+                    <circle cx="200" cy="200" r="150" fill="none" stroke="var(--c)" stroke-opacity=".3"
+                        stroke-width="1" />
+                    <g class="rot r3">
+                        <circle cx="200" cy="200" r="138" fill="none" stroke="var(--c)" stroke-width="10"
+                            stroke-dasharray="3 6" opacity=".35" />
+                        <circle cx="200" cy="200" r="126" fill="none" stroke="var(--c)" stroke-width="2"
+                            stroke-dasharray="90 60 20 60" opacity=".9" />
+                    </g>
+                    <g stroke="var(--c)" stroke-width="1.5" opacity=".6">
+                        <path d="M200 0v14M200 386v14M0 200h14M386 200h14" />
+                    </g>
+                </svg>
+                <span class="sweep"></span>
+                <span class="pulse"></span><span class="pulse"></span>
+                <div class="core">
+                    <svg viewBox="0 0 64 64" aria-hidden="true">
+                        <g fill="none" stroke="var(--c)" stroke-width="3" stroke-linejoin="round"
+                            stroke-linecap="round">
+                            <path d="M8 22l10 12 14-20 14 20 10-12-4 26H12z" />
+                            <path d="M12 54h40" />
+                        </g>
+                        <g fill="#fff">
+                            <circle cx="8" cy="22" r="3" />
+                            <circle cx="32" cy="14" r="3" />
+                            <circle cx="56" cy="22" r="3" />
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            <h1>QUEEN</h1>
+            <div class="tag">YOUR PERSONAL AI ASSISTANT</div>
+            <div id="label" role="status" aria-live="polite">WAKING UP</div>
+            <div id="conv" aria-live="polite"></div>
+        </section>
+
+        <div class="col r">
+            <aside class="panel wide">
+                <h3>TASK QUEUE <span class="cnt" id="tcount">0</span></h3>
+                <ul id="tasks"></ul>
+                <div class="sub" id="dsub" hidden>COMPLETED</div>
+                <ul id="done"></ul>
+            </aside>
+        </div>
+    </main>
+
+    <canvas id="wave" aria-hidden="true"></canvas>
+
+    <script>
+        const LABELS = {
+            waiting: "SAY “ALEX” OR “ALEXA”", listening: "LISTENING", hearing: "HEARING YOU", thinking: "THINKING",
+            speaking: "SPEAKING", starting: "WAKING UP", offline: "WAITING FOR THE QUEEN BACKEND"
+        };
+        const LINK = { offline: "LINK OFFLINE" };
+        const AMP = { offline: .04, waiting: .09, starting: .09, listening: .22, hearing: .75, thinking: .26, speaking: .62 };
+        let current = "", amp = .04, target = .04;
+
+        function stamp() { return new Date().toTimeString().slice(0, 8) }
+        function log(t) {
+            const ul = document.getElementById("log"), li = document.createElement("li");
+            li.innerHTML = "<span>" + stamp() + "</span>" + t; ul.prepend(li); while (ul.children.length > 6) ul.lastChild.remove()
+        }
+
+        function show(state) {
+            if (state === current) return;
+            current = state;
+            document.body.className = "s-" + (state === "starting" ? "waiting" : state);
+            const l = LABELS[state] || "";
+            document.getElementById("label").textContent = l;
+            document.getElementById("link").textContent = LINK[state] || "LINK ACTIVE";
+            target = AMP[state] ?? .09;
+            log(l);
+        }
+
+        let lat = 0;
+        async function poll() {
+            const t0 = performance.now();
+            try {
+                const r = await fetch("/api/state", { cache: "no-store" });
+                const j = await r.json();
+                lat = Math.round(performance.now() - t0);
+                show(j.state); conv(j);
+            } catch (e) { show("offline"); lat = 0 }
+        }
+        poll(); setInterval(poll, 300);
+
+        /* what Queen heard and answered */
+        function conv(j) {
+            const box = document.getElementById("conv"), h = j.heard || "", r = j.reply || "", k = h + "\u0001" + r;
+            if (box.dataset.k === k) return; box.dataset.k = k; box.textContent = "";
+            [["YOU", h], ["QUEEN", r]].forEach(([who, txt]) => {
+                if (!txt) return;
+                const d = document.createElement("div"), b = document.createElement("b"), sp = document.createElement("span");
+                b.textContent = who; sp.textContent = txt; d.append(b, sp); box.append(d);
+            });
+        }
+
+        /* task queue: data comes from /api/tasks (saved in data/tasks.json) */
+        let TASKS = [], DONE = [], known = null, sig = "";
+        function fmtCd(ms) {
+            if (ms <= 0) { const m = Math.floor(-ms / 60000); return m < 1 ? "DUE NOW" : "OVERDUE " + (m < 60 ? m + "M" : Math.floor(m / 60) + "H") }
+            const s = Math.floor(ms / 1000);
+            if (s < 3600) return "IN " + Math.floor(s / 60) + "M " + String(s % 60).padStart(2, "0") + "S";
+            if (s < 86400) return "IN " + Math.floor(s / 3600) + "H " + Math.floor(s % 3600 / 60) + "M";
+            return "IN " + Math.floor(s / 86400) + "D";
+        }
+        function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e }
+        function renderTasks() {
+            const sg = JSON.stringify([TASKS.map(t => [t.id, t.text, t.due]), DONE.map(t => t.id)]);
+            if (sg === sig) return; sig = sg;
+            const ul = document.getElementById("tasks"), dl = document.getElementById("done");
+            document.getElementById("tcount").textContent = TASKS.length;
+            ul.textContent = ""; dl.textContent = "";
+            if (!TASKS.length) {
+                const li = el("li", "empty", "No pending tasks. Say:");
+                li.append(el("q", "", "remind me to call mom at 5 pm")); ul.append(li);
+            }
+            TASKS.forEach(t => {
+                const li = el("li", "task" + (known.has(t.id) ? "" : " new")); known.add(t.id); li.dataset.due = t.due || "";
+                const m = el("div", "m"); m.append(el("span", "", t.when || "No reminder time"), el("span", "cd"));
+                li.append(el("div", "n", t.number), el("div", "t", t.text), m); ul.append(li);
+            });
+            DONE.forEach(t => dl.append(el("li", "", t.text)));
+            document.getElementById("dsub").hidden = !DONE.length;
+            tick();
+        }
+        function tick() {
+            const now = Date.now();
+            document.querySelectorAll("#tasks .task").forEach(li => {
+                const cd = li.querySelector(".cd");
+                if (!li.dataset.due) { cd.textContent = "NO TIME"; li.classList.add("none"); return }
+                const ms = new Date(li.dataset.due).getTime() - now;
+                cd.textContent = fmtCd(ms);
+                li.classList.toggle("over", ms <= 0);
+                li.classList.toggle("soon", ms > 0 && ms < 600000);
+            });
+        }
+        async function pollTasks() {
+            try {
+                const j = await (await fetch("/api/tasks", { cache: "no-store" })).json();
+                TASKS = j.tasks || []; DONE = j.done || [];
+                if (known === null) known = new Set(TASKS.map(t => t.id));
+                renderTasks();
+            } catch (e) { }
+        }
+        pollTasks(); setInterval(pollTasks, 2000); setInterval(tick, 1000);
+
+        /* clock + cosmetic telemetry */
+        setInterval(() => { document.getElementById("clock").textContent = stamp() }, 1000);
+        function tele() {
+            const off = current === "offline", busy = { hearing: 1, thinking: 1, speaking: 1 }[current];
+            const v = [off ? 0 : (busy ? 60 + Math.random() * 30 : 12 + Math.random() * 14), off ? 0 : (current === "speaking" || current === "hearing" ? 70 + Math.random() * 25 : 8 + Math.random() * 10), off ? 0 : 92 + Math.random() * 7];
+            v.forEach((x, i) => { document.getElementById("v" + (i + 1)).textContent = off ? "--" : Math.round(x) + "%"; document.getElementById("b" + (i + 1)).style.width = x + "%" });
+            document.getElementById("v4").textContent = off ? "-- ms" : lat + " ms";
+            let h = ""; for (let i = 0; i < 4; i++)h += Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, "0").toUpperCase() + " ";
+            document.getElementById("hex").textContent = off ? "0000 0000 0000 0000" : h;
+        }
+        tele(); setInterval(tele, 900);
+
+        /* waveform */
+        const cv = document.getElementById("wave"), ctx = cv.getContext("2d"); let W, H, dpr;
+        function size() { dpr = devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0) }
+        addEventListener("resize", size); size();
+        function draw(t) {
+            amp += (target - amp) * .06;
+            const col = getComputedStyle(document.body).getPropertyValue("--c").trim() || "#2fe6ff";
+            ctx.clearRect(0, 0, W, H);
+            const mid = H * .55, sp = current === "hearing" || current === "speaking" ? 2.4 : 1;
+            [[1, 1, .9, 2], [1.6, -.7, .5, 1.5], [2.4, .5, .3, 1]].forEach(([f, s, a, w]) => {
+                ctx.beginPath(); ctx.lineWidth = w; ctx.strokeStyle = col; ctx.globalAlpha = a; ctx.shadowColor = col; ctx.shadowBlur = 8;
+                for (let x = 0; x <= W; x += 4) {
+                    const n = x / W, env = Math.sin(n * Math.PI);
+                    const y = mid + Math.sin(n * 9 * f + t / 700 * s * sp) * H * .4 * amp * env + Math.sin(n * 23 * f - t / 450 * s * sp) * H * .12 * amp * env;
+                    x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+                } ctx.stroke();
+            });
+            ctx.shadowBlur = 0; ctx.globalAlpha = .55; ctx.fillStyle = col;
+            const n = Math.floor(W / 9);
+            for (let i = 0; i < n; i++) {
+                const p = i / n, env = Math.sin(p * Math.PI);
+                const hgt = 2 + (Math.sin(i * .7 + t / 260 * sp) * .5 + .5) * (Math.sin(i * 1.9 - t / 410) * .5 + .5) * H * .5 * amp * env;
+                ctx.fillRect(i * 9, H - hgt, 4, hgt);
+            }
+            ctx.globalAlpha = 1; requestAnimationFrame(draw);
+        }
+        requestAnimationFrame(draw);
+    </script>
+</body>
+
+</html>
